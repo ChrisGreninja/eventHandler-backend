@@ -159,6 +159,12 @@ app.get('/', (req, res) => {
     });
 });
 
+app.get('/login', (req, res) => {
+    res.json({
+        msg: "hello"
+    });
+});
+
 // User route
 app.get('/user', verifyToken, (req, res) => {
     res.json({
