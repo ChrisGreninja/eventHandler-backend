@@ -116,9 +116,14 @@ app.post('/login', async (req, res) => {
 
         // Guest login handling
         if (email === 'guest@example.com' && password === 'guest') {
-            const token = jwt.sign({ name: 'Guest' }, "secret-key", { expiresIn: '1d' });
-            res.cookie('token', token);
-            return res.json({ Status: "Success" });
+            const token = jwt.sign({ name: 'Guest', isGuest: true }, "secret-key", { expiresIn: '1d' });
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 24 * 60 * 60 * 1000
+            });
+            return res.json({ Status: "Success", isGuest: true });
         }
 
         const user = await User.findOne({ email });
@@ -130,9 +135,23 @@ app.post('/login', async (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         
         if (match) {
-            const token = jwt.sign({ userId: user._id, name: user.name }, "secret-key", { expiresIn: '1d' });
-            res.cookie('token', token);
-            return res.json({ Status: "Success" });
+            const token = jwt.sign({ 
+                userId: user._id, 
+                name: user.name,
+                isGuest: false 
+            }, "secret-key", { expiresIn: '1d' });
+            
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 24 * 60 * 60 * 1000
+            });
+            return res.json({ 
+                Status: "Success",
+                isGuest: false,
+                name: user.name
+            });
         } else {
             return res.json({ Error: "Password does not match" });
         }
