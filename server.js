@@ -168,6 +168,7 @@ const verifyToken = (req, res, next) => {
     jwt.verify(token, "secret-key", (err, decoded) => {
         if (err) return res.json({ Error: "Invalid token" });
         req.user = decoded;
+        // Include isGuest in the response
         next();
     });
 };
@@ -182,7 +183,8 @@ app.get('/', (req, res) => {
 app.get('/user', verifyToken, (req, res) => {
     res.json({
         name: req.user.name,
-        userId: req.user.userId
+        userId: req.user.userId,
+        isGuest: req.user.isGuest || false
     });
 });
 
