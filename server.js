@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: ["https://eventhandler-front-end.vercel.app/"],
+    origin: ["https://eventhandler-front-cnhgjbmdl-chris-projects-dbc5a559.vercel.app/"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true
 }));
