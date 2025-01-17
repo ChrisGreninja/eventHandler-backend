@@ -161,7 +161,7 @@ app.get('/', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.json({
-        msg: "hello"
+        msg: "hello login"
     });
 });
 
