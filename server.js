@@ -121,7 +121,8 @@ app.post('/login', async (req, res) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
-                maxAge: 24 * 60 * 60 * 1000
+                maxAge: 24 * 60 * 60 * 1000,
+                expires: false  // This ensures the cookie is a session cookie
             });
             return res.json({ Status: "Success", isGuest: true });
         }
