@@ -387,7 +387,11 @@ app.post('/events/join', verifyToken, async (req, res) => {
 
 // Logout route
 app.post('/logout', (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    });
     res.json({ Status: "Logged out successfully" });
 });
 
