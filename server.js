@@ -316,6 +316,34 @@ app.get('/events/:id/attendees', async (req, res) => {
     }
 });
 
+app.delete('/events/:id', verifyToken, async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const userId = req.user.userId;
+
+        // Find the event first to check ownership
+        const event = await Event.findById(eventId);
+        
+        if (!event) {
+            return res.json({ Error: "Event not found" });
+        }
+
+        // Check if the user is the event creator
+        if (event.user_id.toString() !== userId) {
+            return res.json({ Error: "You are not authorized to delete this event" });
+        }
+
+        // Delete the event and its associated attendees
+        await Event.findByIdAndDelete(eventId);
+        await Attendee.deleteMany({ event_id: eventId });
+
+        res.json({ Status: "Event deleted successfully" });
+    } catch (err) {
+        console.error("Error deleting event:", err);
+        res.json({ Error: "Error deleting event" });
+    }
+});
+
 // Create event
 app.post('/events/create', verifyToken, async (req, res) => {
     try {
